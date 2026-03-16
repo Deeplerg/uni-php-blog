@@ -15,6 +15,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // TODO routes for regular users to submit comments on posts
 });
+
+Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {
+    Route::get('/dashboard', function () {
+        return 'Editor Dashboard'; // TODO editor dashboard
+    })->name('editor.dashboard');
+
+    // TODO routes for post creation / editing
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        return 'Admin Dashboard'; // TODO admin dashboard
+    })->name('admin.dashboard');
+
+    // TODO routes for viewing all users and upgrading their roles
+});
+
 
 require __DIR__.'/auth.php';
