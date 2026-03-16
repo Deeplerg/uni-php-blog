@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(functi
         return 'Editor Dashboard'; // TODO editor dashboard
     })->name('editor.dashboard');
 
-    // TODO routes for post creation / editing
+    Route::resource('posts', PostController::class);
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
