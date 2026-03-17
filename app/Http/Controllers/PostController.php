@@ -42,7 +42,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        // TODO show post
+        $post->load('author'); // Эта штука подгружает связанного автора; без этого лаврушка будет выполнять отдельный запрос и спамить бд ненужным трафиком
+
+        return view('posts.show', compact('post'));
     }
 
     /**
