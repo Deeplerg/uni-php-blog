@@ -37,5 +37,54 @@
         @endauth
     </div>
 
+    <div >
+        <h3>Комментарии ({{ $post->comments->count() }})</h3>
+
+        @auth
+            <form method="POST" action="{{ route('comments.store', $post) }}">
+                @csrf
+                <textarea name="body" rows="3"
+                          @error('body')  @enderror
+                          placeholder="Напишите комментарий...">{{ old('body') }}</textarea>
+                @error('body')
+                    <p>{{ $message }}</p>
+                @enderror
+                <button type="submit">
+                    Отправить
+                </button>
+            </form>
+        @else
+            <p>
+                <a href="{{ route('login') }}">Войдите чтобы оставить комментарий.</a>,
+            </p>
+        @endauth
+
+        <div>
+            @forelse($post->comments as $comment)
+                <div>
+                    <span>{{ $comment->author->name }}</span>
+                    <span>{{ $comment->created_at->diffForHumans() }}</span>
+                    <p>{{ $comment->body }}</p>
+
+                    @auth
+                        @if(auth()->id() === $comment->user_id || auth()->user()->role === 'admin')
+                            <form method="POST" action="{{ route('comments.destroy', $comment) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">
+                                    Удалить
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
+                </div>
+            @empty
+                <p>Пока нет комментариев. Будьте первым!</p>
+            @endforelse
+        </div>
+    </div>
+
+    <div>
         <a href="{{ route('posts.index') }}"> ← Назад </a>
+    </div>
 @endsection
