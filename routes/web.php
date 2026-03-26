@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // TODO routes for regular users to submit comments on posts
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    // TODO: протестить эти И написать роут для обновления комммента
 });
 
 Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {
