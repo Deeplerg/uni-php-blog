@@ -21,14 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     // TODO: протестить эти И написать роут для обновления комммента
+
+    Route::resource('posts', PostController::class);
 });
 
 Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {
     Route::get('/dashboard', function () {
         return 'Editor Dashboard'; // TODO editor dashboard
     })->name('editor.dashboard');
-
-    Route::resource('posts', PostController::class);
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
