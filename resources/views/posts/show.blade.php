@@ -1,90 +1,25 @@
-@extends('layouts.app')
+{{-- stolen from resources/views/posts/show.blade.php --}}
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ $post->title }}
+        </h2>
+    </x-slot>
 
-@section('title', $post->title)
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-@section('header')
-    <h2>
-        {{ $post->title }}
-    </h2>
-@endsection
-
-@section('content')
-    <article>
-        <div>
-            <p>
-                Автор: {{ $post->author->name }}
-                Дата {{ $post->created_at->format('F d, Y') }}
-                @if($post->updated_at->ne($post->created_at))
-                    Обновлено {{ $post->updated_at->format('F d, Y') }}
-                @endif
-            </p>
-        </div>
-        <div>{{ $post->body }}</div>
-    </article>
-
-    <div>
-        @auth
-            @if(auth()->id() === $post->user_id || in_array(auth()->user()->role, ['editor', 'admin']))
-                <a href="{{ route('posts.edit', $post) }}">Бредактировать </a>
-
-                <form method="POST" action="{{ route('posts.destroy', $post) }}"
-                        onsubmit="return confirm('Точно удалить удалить пост?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Удалить</button>
-                </form>
-            @endif
-        @endauth
-    </div>
-
-    <div >
-        <h3>Комментарии ({{ $post->comments->count() }})</h3>
-
-        @auth
-            <form method="POST" action="{{ route('comments.store', $post) }}">
-                @csrf
-                <textarea name="body" rows="3"
-                          @error('body')  @enderror
-                          placeholder="Напишите комментарий...">{{ old('body') }}</textarea>
-                @error('body')
-                    <p>{{ $message }}</p>
-                @enderror
-                <button type="submit">
-                    Отправить
-                </button>
-            </form>
-        @else
-            <p>
-                <a href="{{ route('login') }}">Войдите чтобы оставить комментарий.</a>,
-            </p>
-        @endauth
-
-        <div>
-            @forelse($post->comments as $comment)
-                <div>
-                    <span>{{ $comment->author->name }}</span>
-                    <span>{{ $comment->created_at->diffForHumans() }}</span>
-                    <p>{{ $comment->body }}</p>
-
-                    @auth
-                        @if(auth()->id() === $comment->user_id || auth()->user()->role === 'admin')
-                            <form method="POST" action="{{ route('comments.destroy', $comment) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">
-                                    Удалить
-                                </button>
-                            </form>
-                        @endif
-                    @endauth
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('posts.partials.post-content')
                 </div>
-            @empty
-                <p>Пока нет комментариев. Будьте первым!</p>
-            @endforelse
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('posts.partials.comments-section')
+                </div>
+            </div>
         </div>
     </div>
-
-    <div>
-        <a href="{{ route('posts.index') }}"> ← Назад </a>
-    </div>
-@endsection
+</x-app-layout>
