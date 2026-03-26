@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('posts.index');
 });
 
 Route::get('/dashboard', function () {
@@ -22,9 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     // TODO: протестить эти И написать роут для обновления комммента
-
-    Route::resource('posts', PostController::class);
 });
+
+Route::resource('posts', PostController::class);
 
 Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {
     Route::get('/dashboard', function () {

@@ -5,11 +5,13 @@
                 {{ __('Posts') }}
             </h2>
 
-            <a href="{{ route('posts.create') }}">
-                <x-primary-button type="button">
-                    {{ __('New post') }}
-                </x-primary-button>
-            </a>
+            @can('create', App\Models\Post::class)
+                <a href="{{ route('posts.create') }}">
+                    <x-primary-button type="button">
+                        {{ __('New post') }}
+                    </x-primary-button>
+                </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -35,18 +37,22 @@
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <a href="{{ route('posts.edit', $post) }}" class="text-gray-500 hover:text-gray-900" title="Edit">
-                            <x-heroicon-o-pencil class="w-5 h-5" />
-                        </a>
+                        @can('update', $post)
+                            <a href="{{ route('posts.edit', $post) }}" class="text-gray-500 hover:text-gray-900" title="Edit">
+                                <x-heroicon-o-pencil class="w-5 h-5" />
+                            </a>
+                        @endcan
 
-                        <form method="POST" action="{{ route('posts.destroy', $post) }}"
-                              onsubmit="return confirm('Are you sure? Deleting post: {{ $post->title }}');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-900" title="Delete">
-                                <x-heroicon-o-trash class="w-5 h-5" />
-                            </button>
-                        </form>
+                        @can('delete', $post)
+                            <form method="POST" action="{{ route('posts.destroy', $post) }}"
+                                  onsubmit="return confirm('Are you sure? Deleting post: {{ $post->title }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-900" title="Delete">
+                                    <x-heroicon-o-trash class="w-5 h-5" />
+                                </button>
+                            </form>
+                        @endcan
                     </div>
 
                 </div>
