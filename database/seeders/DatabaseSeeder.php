@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@example.com',
             'role' => 'admin',
-            'password' => 'admin123'
+            'password' =>\Illuminate\Support\Facades\Hash::make('admin123'),
         ]);
 
         $post1 = Post::create([
