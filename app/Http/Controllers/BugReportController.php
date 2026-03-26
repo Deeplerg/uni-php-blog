@@ -22,6 +22,7 @@ class BugReportController extends Controller
             'message' => $request->message,
         ]);
 
-        return back()->with('status', 'Bug report sent. Thank you!');
+        //return redirect()->route('posts.index')->with('status', 'Bug report sent. Thank you!');
+        return redirect()->route('posts.index');
     }
 }
