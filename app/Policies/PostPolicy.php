@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PostPolicy
 {
@@ -21,7 +20,19 @@ class PostPolicy
      */
     public function view(?User $user, Post $post): bool
     {
-        return true;
+        if ($post->isPublished()) {
+            return true;
+        }
+
+        if (! $user) {
+            return false;
+        }
+
+        if (in_array($user->role, ['editor', 'admin'], true)) {
+            return true;
+        }
+
+        return $user->id === $post->user_id;
     }
 
     /**
@@ -29,11 +40,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        if (in_array($user->role, ['admin', 'editor'])) {
-            return true;
-        }
-
-        return false;
+        return in_array($user->role, ['user', 'editor', 'admin'], true);
     }
 
     /**
@@ -41,11 +48,11 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        if (in_array($user->role, ['admin', 'editor'])) {
+        if ($user->role === 'admin') {
             return true;
         }
 
-        return $user->id === $post->user_id;
+        return $user->id === $post->user_id && $post->isDraft();
     }
 
     /**
@@ -57,7 +64,23 @@ class PostPolicy
             return true;
         }
 
-        return $user->id === $post->user_id;
+        return $user->id === $post->user_id && $post->isDraft();
+    }
+
+    /**
+     * Determine whether the user can publish the model.
+     */
+    public function publish(User $user, Post $post): bool
+    {
+        return in_array($user->role, ['editor', 'admin'], true) && $post->isDraft();
+    }
+
+    /**
+     * Determine whether the user can unpublish the model.
+     */
+    public function unpublish(User $user, Post $post): bool
+    {
+        return in_array($user->role, ['editor', 'admin'], true) && $post->isPublished();
     }
 
     /**
