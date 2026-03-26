@@ -52,18 +52,16 @@
                     {{ $comment->body }}
                 </p>
 
-                @auth
-                    @if(auth()->id() === $comment->user_id || auth()->user()->role === 'admin')
-                        <form method="POST" action="{{ route('comments.destroy', $comment) }}" class="mt-2">
-                            @csrf
-                            @method('DELETE')
+                @can('delete', $comment)
+                    <form method="POST" action="{{ route('comments.destroy', $comment) }}" class="mt-2">
+                        @csrf
+                        @method('DELETE')
 
-                            <button type="submit" class="text-sm text-red-600 hover:text-red-900">
-                                {{ __('Delete') }}
-                            </button>
-                        </form>
-                    @endif
-                @endauth
+                        <button type="submit" class="text-sm text-red-600 hover:text-red-900">
+                            {{ __('Delete') }}
+                        </button>
+                    </form>
+                @endcan
             </div>
         @empty
             <p class="mt-1 text-sm text-gray-600">{{ __('No comments :( ') }}</p>

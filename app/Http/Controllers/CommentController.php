@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,8 @@ class CommentController extends Controller
      */
     public function store(Request $request, Post $post): RedirectResponse
     {
+        Gate::authorize('create', Comment::class);
+
         $validated = $request->validate([
             'body' => 'required', // Не сохранять же пустой коммент.
         ]);
@@ -31,6 +34,8 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment): RedirectResponse
     {
+        Gate::authorize('delete', Comment::class);
+
         $post = $comment->post;
 
         $comment->delete();

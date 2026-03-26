@@ -16,25 +16,24 @@
 
 {{--    stolen from update-profile-information-form.blade.php--}}
     <div class="flex items-center gap-4">
-        @auth
-            @if(auth()->id() === $post->user_id || in_array(auth()->user()->role,['editor', 'admin']))
+        @can('update', $post)
 
-                <a href="{{ route('posts.edit', $post) }}">
-                    <x-secondary-button>
-                        {{ __('Edit') }}
-                    </x-secondary-button>
-                </a>
+            <a href="{{ route('posts.edit', $post) }}">
+                <x-secondary-button>
+                    {{ __('Edit') }}
+                </x-secondary-button>
+            </a>
+        @endcan
 
-                <form method="POST" action="{{ route('posts.destroy', $post) }}"
-                      onsubmit="return confirm('Are you sure?');">
-                    @csrf
-                    @method('DELETE')
-                    <x-danger-button>
-                        {{ __('Delete') }}
-                    </x-danger-button>
-                </form>
-
-            @endif
-        @endauth
+        @can('delete', $post)
+            <form method="POST" action="{{ route('posts.destroy', $post) }}"
+                  onsubmit="return confirm('Are you sure?');">
+                @csrf
+                @method('DELETE')
+                <x-danger-button>
+                    {{ __('Delete') }}
+                </x-danger-button>
+            </form>
+        @endcan
     </div>
 </section>

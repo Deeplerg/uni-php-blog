@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -22,6 +23,8 @@ class PostController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Post::class);
+
         return view('posts.create');
     }
 
@@ -52,6 +55,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        Gate::authorize('update', $post);
+
         return view('posts.edit', compact('post'));
     }
 
@@ -60,6 +65,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        Gate::authorize('update', $post);
+
         $validated = $this->validatePost($request);
 
         $post->update($validated);
@@ -72,6 +79,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        Gate::authorize('delete', $post);
+
         $post->delete();
 
         return redirect()->route('posts.index');
