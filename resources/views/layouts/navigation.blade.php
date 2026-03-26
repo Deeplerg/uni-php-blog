@@ -25,6 +25,9 @@
                             <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                                 {{ __('Users Management') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.bug-reports.index')" :active="request()->routeIs('admin.bug-reports.*')">
+                                {{ __('Bug Reports') }}
+                            </x-nav-link>
                         @endif
                     @endauth
                 </div>
@@ -95,6 +98,9 @@
                 @if(auth()->user()->role === 'admin')
                     <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                         {{ __('Users Management') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.bug-reports.index')" :active="request()->routeIs('admin.users.*')">
+                        {{ __('Bug Reports') }}
                     </x-responsive-nav-link>
                 @endif
             @else
