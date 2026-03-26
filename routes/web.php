@@ -39,5 +39,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // TODO routes for viewing all users and upgrading their roles
 });
 
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        // Можно сделать красивый дашборд, а пока редирект на список юзеров
+        return redirect()->route('admin.users.index');
+    })->name('admin.dashboard');
+
+    // Управление пользователями
+    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+    Route::patch('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
+});
 
 require __DIR__.'/auth.php';
