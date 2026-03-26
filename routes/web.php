@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminBugReportController;
+use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostImageController;
@@ -44,11 +46,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return 'Admin Dashboard';
     })->name('admin.dashboard');
-    
+
     // Управление пользователями
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
+    //Баг-репорты
+Route::post('/bug-report', [BugReportController::class, 'store'])->name('bug-reports.store');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // ... существующие роуты ...
+    Route::get('/bug-reports', [AdminBugReportController::class, 'index'])->name('bug-reports.index');
+    Route::delete('/bug-reports/{bugReport}', [AdminBugReportController::class, 'destroy'])->name('bug-reports.destroy');
+});
 require __DIR__.'/auth.php';
