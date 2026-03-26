@@ -16,7 +16,7 @@
                         </h2>
                     </header>
 
-                    <form method="POST" action="{{ route('posts.store') }}" class="mt-6 space-y-6">
+                    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
                         @csrf
 
                         <div>
@@ -32,6 +32,17 @@
                                       class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                       required>{{ old('body') }}</textarea>
                             <x-input-error class="mt-2" :messages="$errors->get('body')" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="images" :value="__('Images')" />
+                            <input id="images" name="images[]" type="file" accept="image/*" multiple
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                            <p class="mt-2 text-sm text-gray-500">
+                                You can upload up to 5 images, 5 MB each.
+                            </p>
+                            <x-input-error class="mt-2" :messages="$errors->get('images')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('images.*')" />
                         </div>
 
                         <div class="flex items-center gap-4">
