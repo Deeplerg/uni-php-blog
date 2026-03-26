@@ -14,7 +14,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('posts', PostController::class)->only(['index', 'show']);
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}/images/{image}', [PostImageController::class, 'show'])->name('posts.images.show');
 
 Route::middleware('auth')->group(function () {
@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/posts/{post}/publish', [PostController::class, 'publish'])->name('posts.publish');
     Route::patch('/posts/{post}/unpublish', [PostController::class, 'unpublish'])->name('posts.unpublish');
 });
+
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
 Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {
     Route::get('/dashboard', function () {

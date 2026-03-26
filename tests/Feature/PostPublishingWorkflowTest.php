@@ -11,6 +11,13 @@ class PostPublishingWorkflowTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_guest_is_redirected_to_login_from_post_create_page(): void
+    {
+        $response = $this->get(route('posts.create'));
+
+        $response->assertRedirect(route('login'));
+    }
+
     public function test_user_created_post_starts_as_draft(): void
     {
         $author = User::factory()->create([
