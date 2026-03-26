@@ -95,6 +95,36 @@ class PostPublishingWorkflowTest extends TestCase
         $this->assertSame($editor->id, $post->published_by);
     }
 
+    public function test_editor_can_move_published_post_back_to_draft(): void
+    {
+        $author = User::factory()->create([
+            'role' => 'user',
+        ]);
+
+        $editor = User::factory()->create([
+            'role' => 'editor',
+        ]);
+
+        $post = Post::create([
+            'title' => 'Published post',
+            'body' => 'Body',
+            'user_id' => $author->id,
+            'status' => Post::STATUS_PUBLISHED,
+            'published_at' => now(),
+            'published_by' => $editor->id,
+        ]);
+
+        $response = $this->actingAs($editor)->patch(route('posts.unpublish', $post));
+
+        $response->assertRedirect(route('posts.show', $post));
+
+        $post->refresh();
+
+        $this->assertSame(Post::STATUS_DRAFT, $post->status);
+        $this->assertNull($post->published_at);
+        $this->assertNull($post->published_by);
+    }
+
     public function test_author_cannot_edit_own_published_post(): void
     {
         $author = User::factory()->create([

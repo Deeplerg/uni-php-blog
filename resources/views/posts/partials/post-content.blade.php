@@ -54,7 +54,7 @@
             <form method="POST" action="{{ route('posts.unpublish', $post) }}">
                 @csrf
                 @method('PATCH')
-                <x-secondary-button>
+                <x-secondary-button type="submit">
                     {{ __('Move to Drafts') }}
                 </x-secondary-button>
             </form>
