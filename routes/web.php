@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostImageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::resource('posts', PostController::class)->only(['index', 'show']);
+Route::get('/posts/{post}/images/{image}', [PostImageController::class, 'show'])->name('posts.images.show');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,7 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     // TODO: протестить эти И написать роут для обновления комммента
 
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class)->except(['index', 'show']);
+    Route::patch('/posts/{post}/publish', [PostController::class, 'publish'])->name('posts.publish');
+    Route::patch('/posts/{post}/unpublish', [PostController::class, 'unpublish'])->name('posts.unpublish');
 });
 
 Route::middleware(['auth', 'role:editor,admin'])->prefix('editor')->group(function () {

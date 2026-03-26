@@ -40,7 +40,7 @@
                                         <select name="role" onchange="this.form.submit()" 
                                             class="text-sm rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 {{ $user->id === auth()->id() ? 'bg-gray-100 cursor-not-allowed' : '' }}"
                                             {{ $user->id === auth()->id() ? 'disabled' : '' }}>
-                                            <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
+                                            <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>Author</option>
                                             <option value="editor" {{ $user->role === 'editor' ? 'selected' : '' }}>Editor</option>
                                             <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                         </select>
