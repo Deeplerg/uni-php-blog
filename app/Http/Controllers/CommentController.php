@@ -34,7 +34,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment): RedirectResponse
     {
-        Gate::authorize('delete', Comment::class);
+        Gate::authorize('delete', $comment);
 
         $post = $comment->post;
 
