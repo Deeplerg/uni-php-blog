@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +17,18 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (Throwable $e, Request $request) {
+            $code = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
+
+            $headers = [
+                'X-App-Error-Code' => $code,
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            ];
+
+            return response()->view('errors.dynamic', [
+                'code' => $code,
+            ], $code, $headers);
+        });
+
     })->create();
