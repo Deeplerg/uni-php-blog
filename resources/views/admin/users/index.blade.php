@@ -8,7 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
-            <!-- Сообщения об успехе/ошибке -->
             @if (session('status'))
                 <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">{{ session('status') }}</div>
             @endif
@@ -48,7 +47,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Удалить пользователя?')">
+                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Delete a user?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold">
